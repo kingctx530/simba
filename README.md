@@ -41,5 +41,5 @@ usage: main.py [-h] [-n NAME] [-p PATH] [-c]
 
 #### 建立專案範例
 ```shell
-python main.py createproject -n 'project name' -c 'channels' -p 'project folder path'
+python main.py newproject -n `project name` -c `channels` -p `project folder path`
 ```
