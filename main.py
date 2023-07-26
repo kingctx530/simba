@@ -1,6 +1,5 @@
 import os
 import subprocess
-import sys
 from argparse import ArgumentParser
 from subprocess import PIPE
 
@@ -22,7 +21,8 @@ class Simba:
         project_name = getattr(*args, "name")
         assert project_name, "NOT GET PROJECT... (-n `project name`)"
         project_path = getattr(*args, "path")
-        project_channels = getattr(*args, "channels")
+        # project_channels = getattr(*args, "channels")
+        project_channels = True
         if project_path is None:
             project_path = "."
         else:
@@ -30,7 +30,6 @@ class Simba:
                 os.makedirs(project_path, exist_ok=True)
             os.chdir(project_path)
         self.new_pt = '{} startproject {}'.format(self.django_cmd, project_name)
-
         pn = subprocess.Popen(self.new_pt,
                               shell=True,
                               stdout=PIPE,
@@ -74,8 +73,8 @@ parser = ArgumentParser(description="Calamus & Glider's Django auto generate too
 parser.add_argument("newproject", nargs=1, help="create Django project's base structure")
 parser.add_argument("-n", "--name", help="Django project name", dest="name", default="default")
 parser.add_argument("-p", "--path", help="Django project path", dest="path", required=False)
-parser.add_argument("-c", "--channels", help="Add channels settings", action='store_true', dest="channels",
-                    required=False)
+# parser.add_argument("-c", "--channels", help="Add channels settings", action='store_true', dest="channels",
+#                     required=False)
 
 parser.add_argument("--delproject", nargs=2, help="delete Django project's base structure")
 
@@ -83,10 +82,10 @@ args = parser.parse_args()
 cgd = Simba()
 
 if args.newproject:
-    if args.channels is None:
-        logger.info("《《《 Generate Basic Django Project 「{}」》》》".format(args.name))
-    else:
-        logger.info("《《《 Generate Channels Django Project 「{}」》》》".format(args.name))
+    # if args.channels is None:
+    #     logger.info("《《《 Generate Basic Django Project 「{}」》》》".format(args.name))
+    # else:
+    logger.info("《《《 Generate Channels Django Project 「{}」》》》".format(args.name))
     cgd.new_project(args)
 
 if args.delproject:
