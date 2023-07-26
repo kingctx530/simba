@@ -4,6 +4,10 @@ import sys
 from argparse import ArgumentParser
 from subprocess import PIPE
 
+from loguru import logger
+
+from simba_settings.asgi_update import AsgiUpdate
+from simba_settings.routing_update import RoutingUpdate
 from simba_settings.settings_update import SettingsUpdate
 from simba_settings.urls_update import UrlsUpdate
 
@@ -36,7 +40,7 @@ class Simba:
             line = pn.stdout.readline()
             err_line = pn.stderr.readline()
             if err_line:
-                print("NEW PROJECT ERR >>> ", err_line.decode())
+                logger.info(f"NEW PROJECT ERR >>> {err_line.decode()}")
                 break
             if not line:
                 break
@@ -46,6 +50,7 @@ class Simba:
         self.ul = UrlsUpdate()
         file_path = os.path.join(project_path, project_name, project_name, "urls.py")
         self.ul.file_operation(file_path)
+        self.ul.update_urls(project_name)
 
         self.su = SettingsUpdate()
         file_path = os.path.join(project_path, project_name, project_name, "settings.py")
@@ -53,6 +58,15 @@ class Simba:
         self.su.update_settings(channels=project_channels)
         self.su.auto_building_folder()
         self.su.copy_app()
+
+        self.rt = RoutingUpdate()
+        file_path = os.path.join(project_path, project_name, project_name, "routing.py")
+        self.rt.update_routing(file_path)
+
+        self.asgi = AsgiUpdate()
+        file_path = os.path.join(project_path, project_name, project_name, "asgi.py")
+        self.asgi.update_asgi(file_path,project_name)
+
 
 
 
@@ -70,10 +84,10 @@ cgd = Simba()
 
 if args.newproject:
     if args.channels is None:
-        print("《《《 Generate Basic Django Project 「{}」》》》".format(args.name))
+        logger.info("《《《 Generate Basic Django Project 「{}」》》》".format(args.name))
     else:
-        print("《《《 Generate Channels Django Project 「{}」》》》".format(args.name))
+        logger.info("《《《 Generate Channels Django Project 「{}」》》》".format(args.name))
     cgd.new_project(args)
 
 if args.delproject:
-    print("delproject positional arg:", args.delproject)
+    logger.info(f"delproject positional arg:{args.delproject}")
